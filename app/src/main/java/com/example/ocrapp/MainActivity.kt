@@ -1,4 +1,5 @@
-package com.example.ocrapp // Replace with your actual package name
+package com.example.ocrapp
+
 import androidx.compose.material3.OutlinedButton
 import android.Manifest
 import android.annotation.SuppressLint
@@ -90,7 +91,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.util.concurrent.Executors
 
-// --- Gemini-Inspired Dark Mode Palette ---
+// Gemini-Inspired Dark Mode Palette
 val GeminiDarkBg = Color(0xFF131314)
 val GeminiSurface = Color(0xFF1E1F22)
 val GeminiBlue = Color(0xFF8AB4F8)
@@ -148,7 +149,7 @@ fun CameraTextRecognitionScreen() {
     var isLiveScanning by remember { mutableStateOf(true) }
     var showTopControls by remember { mutableStateOf(false) }
     var isGeminiLoading by remember { mutableStateOf(false) }
-    var isFullScreenText by remember { mutableStateOf(false) } // NEW: Full screen state
+    var isFullScreenText by remember { mutableStateOf(false) }
     var imageCaptureUseCase by remember { mutableStateOf<ImageCapture?>(null) }
 
     val cropImageLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
@@ -176,7 +177,6 @@ fun CameraTextRecognitionScreen() {
         isGeminiLoading = true
         coroutineScope.launch {
             try {
-                // IMPORTANT: Read from BuildConfig securely
                 val generativeModel = GenerativeModel("gemini-2.5-flash", BuildConfig.GEMINI_API_KEY)
 
                 val prompt = if (action == "FIX") {
@@ -200,7 +200,6 @@ fun CameraTextRecognitionScreen() {
                 val response = generativeModel.generateContent(prompt)
                 extractedText = response.text ?: "Error generating content."
 
-                // NEW: Enlarge the box to show the full answer
                 isFullScreenText = true
             } catch (e: Exception) {
                 extractedText = "Gemini Error: ${e.localizedMessage}"
@@ -301,14 +300,14 @@ fun CameraTextRecognitionScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // NEW: Animate the height based on the full screen state
+            // Animate the height based on the full screen state
             val animatedHeight by animateDpAsState(
                 targetValue = if (isFullScreenText) (configuration.screenHeightDp * 0.75f).dp else 180.dp,
                 animationSpec = tween(durationMillis = 400),
                 label = "textBoxHeight"
             )
 
-            // Extracted Text Box (NOW EDITABLE AND EXPANDABLE)
+            // Extracted Text Box EDITABLE AND EXPANDABLE
             Box(
                 modifier = Modifier.fillMaxWidth().height(animatedHeight).clip(RoundedCornerShape(16.dp))
                     // Lower opacity so the camera feed shows through like a watermark
@@ -332,7 +331,6 @@ fun CameraTextRecognitionScreen() {
                     modifier = Modifier.fillMaxSize().padding(end = 40.dp, top = if (isFullScreenText) 40.dp else 0.dp)
                 )
 
-                // Minimize Button (Only visible when expanded)
                 if (isFullScreenText) {
                     IconButton(
                         onClick = { isFullScreenText = false },

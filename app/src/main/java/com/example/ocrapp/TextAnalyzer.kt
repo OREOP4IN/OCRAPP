@@ -11,7 +11,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 class TextAnalyzer(
     private val throttleTimeoutMs: Long = 500L,
-    private val isLiveScanningEnabled: () -> Boolean, // NEW: Checks if we should scan
+    private val isLiveScanningEnabled: () -> Boolean,
     private val onTextExtracted: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
 
@@ -52,7 +52,6 @@ class TextAnalyzer(
     }
 }
 
-// TOP LEVEL FUNCTION
 fun sanitizeForPrompt(visionText: Text): String {
     val promptBuilder = StringBuilder()
     for (block in visionText.textBlocks) {
